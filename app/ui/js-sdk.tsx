@@ -1,14 +1,45 @@
+
 "use client";
 import { Button } from '@/app/ui/button';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '../lib/api-request';
+import { ApiError, apiRequest, } from '@/app/lib/api-request';
+import { useEffect } from 'react';
+import wx from 'weixin-js-sdk';
+import { WxConfigOptions } from '@/app/types/wx';
+
+
 export function JsSdk() {
-  useQuery({
+  const { data: wxConfigOptions } = useQuery<WxConfigOptions, ApiError>({
     queryKey: ['JsSdk'],
-    queryFn: () => {
-      return apiRequest.get('/api/js-sdk')
-    }
+    queryFn: async () => {
+      const response = await apiRequest.get<{ data: WxConfigOptions }>('/api/js-sdk')
+      return response.data.data
+    },
   })
+  useEffect(() => {
+    let isConfiguring = false
+    if (!isConfiguring && wxConfigOptions) {
+      isConfiguring = true
+      const _wxConfigOptions: WxConfigOptions = {
+        ...wxConfigOptions,
+        jsApiList: [
+          'chooseImage'
+        ]
+      }
+      console.log(_wxConfigOptions)
+      wx.config({
+        appId: wxConfigOptions.appId,
+        timestamp: Number(wxConfigOptions.timestamp),
+        nonceStr: wxConfigOptions.nonceStr,
+        signature: wxConfigOptions.signature,
+        jsApiList: ["chooseImage"]
+      })
+    }
+    return () => {
+      isConfiguring = true
+    }
+  }, [wxConfigOptions])
+
   return (
     <Button>JsSdk</Button>
   )

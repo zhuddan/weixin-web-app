@@ -1,6 +1,5 @@
 
 "use client";
-import { Button } from '@/app/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiRequest, } from '@/app/lib/api-request';
 import { useEffect } from 'react';
@@ -40,7 +39,5 @@ export function JsSdk() {
     }
   }, [wxConfigOptions])
 
-  return (
-    <Button>JsSdk</Button>
-  )
+  return ('JsSdk')
 }

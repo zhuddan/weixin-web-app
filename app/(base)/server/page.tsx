@@ -1,6 +1,11 @@
 import { getWXOauth2Url, getWxUserinfoByCode } from '@/app/lib/wx';
 import { UserInfo } from '@/app/ui/userinfo';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: '服务端授权'
+}
 
 export default async function Page(props: {
   searchParams?: Promise<{

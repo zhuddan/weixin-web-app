@@ -1,10 +1,13 @@
+import { JsSdk } from "@/app/ui/js-sdk";
 import { Metadata } from "next";
-import { ClientAuth } from "@/app/ui/client-auth";
 
 export const metadata: Metadata = {
-  title: '客户端授权'
+  title: 'JsSdk'
 }
-
 export default function Page() {
-  return <ClientAuth />
+  return (
+    <>
+      <JsSdk />
+    </>
+  )
 }

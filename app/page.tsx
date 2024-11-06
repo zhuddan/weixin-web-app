@@ -1,15 +1,18 @@
-import { AuthButton } from './ui/auth-button';
-export default async function Home(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>
-}) {
-  const searchParams = await props.searchParams
-  console.log(searchParams)
+import Link from "next/link";
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
+
+export const metadata = {
+  title: '微信web应用',
+  description: '微信web应用',
+}
+
+export default function Page() {
   return (
-    <div className='flex items-center justify-center h-[100vh]'>
-      <AuthButton />
+    <div className='w-full'>
+      <Link className={`w-full  p-2 border-b  border-t items-center flex justify-between`} href={'./client'}>
+        <span>客户端授权</span>
+        <ChevronRightIcon className="size-6 text-gray-500" />
+      </Link>
     </div>
   );
 }

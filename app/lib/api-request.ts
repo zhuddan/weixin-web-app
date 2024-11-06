@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // 定义 Content-Type 枚举
-enum ContentType {
+export enum ContentType {
   JSON = 'application/json',
   FORM_DATA = 'multipart/form-data',
   URL_ENCODED = 'application/x-www-form-urlencoded',
@@ -8,14 +8,14 @@ enum ContentType {
 }
 
 // 定义请求配置接口
-interface RequestConfig extends RequestInit {
+export interface RequestConfig extends RequestInit {
   headers?: HeadersInit;
   params?: Record<string, string>;
   data?: any;
 }
 
 // 定义响应接口
-interface ApiResponse<T = any> {
+export interface ApiResponse<T = any> {
   data: T;
   status: number;
   headers: Headers;
@@ -77,7 +77,7 @@ export class ApiError extends Error {
     public data?: any,
     public headers?: Headers
   ) {
-    super(`HTTP Error: ${status} ${statusText}`);
+    super(`HTTP Error: ${status}`);
     this.name = 'ApiError';
   }
 }
@@ -137,21 +137,24 @@ class ApiRequest {
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     let responseData: any;
 
-    try {
-      responseData = await response.json();
-    } catch (e) {
-      console.log(e)
-      responseData = null;
-    }
-
     if (!response.ok) {
+      const json = (await response.json())
+      const errorMsg = json?.error ?? ''
       throw new ApiError(
         response.status,
-        response.statusText,
+        errorMsg ?? response.statusText,
         responseData,
         response.headers
       );
     }
+
+    try {
+      responseData = await response.json();
+    } catch (e) {
+      console.log({ e })
+      responseData = null;
+    }
+
 
     return {
       data: responseData,
@@ -176,10 +179,6 @@ class ApiRequest {
       restConfig.body = JSON.stringify(data);
     }
 
-    console.log({
-      ...restConfig,
-      headers: finalHeaders
-    })
     const response = await fetch(finalUrl, {
       ...restConfig,
       headers: finalHeaders
@@ -223,6 +222,6 @@ class ApiRequest {
   }
 }
 
-export { ApiRequest, ContentType, type TokenManager, DefaultTokenManager, CustomTokenManager };
+export { ApiRequest, type TokenManager, DefaultTokenManager, CustomTokenManager };
 
 export const apiRequest = new ApiRequest()

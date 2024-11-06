@@ -22,7 +22,7 @@ export function getWxConfig() {
   };
 }
 
-export async function fetchAccessToken(
+export async function fetchAuthAccessToken(
   appId: string,
   appSecret: string,
   code: string
@@ -56,7 +56,7 @@ export async function getWxUserinfoByCode(code: string) {
   // 2. 验证环境变量
   const { appId, appSecret } = getWxConfig();
 
-  const accessTokenData = await fetchAccessToken(appId, appSecret, code);
+  const accessTokenData = await fetchAuthAccessToken(appId, appSecret, code);
   if ('errcode' in accessTokenData) {
     throw new Error('[Failed to get access token]: ' + accessTokenData.errmsg);
   }
@@ -66,4 +66,35 @@ export async function getWxUserinfoByCode(code: string) {
     throw new Error('[Failed to get user info]: ' + userInfo.errmsg,);
   }
   return userInfo
+}
+
+
+/**
+ * @see https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
+ */
+export async function fetchBaseAccessToken() {
+  const { appId, appSecret } = getWxConfig();
+  const url = new URL('https://api.weixin.qq.com/cgi-bin/token')
+  url.searchParams.set('grant_type', 'client_credential')
+  url.searchParams.set('appid', appId)
+  url.searchParams.set('secret', appSecret)
+  const data = await (await fetch(url)).json()
+  return data as {
+    access_token: string;
+    expires_in: number;
+  }
+}
+
+
+export async function getJsApiTicket(access_token: string) {
+  const url = new URL('https://api.weixin.qq.com/cgi-bin/ticket/getticket')
+  url.searchParams.set('access_token', access_token)
+  url.searchParams.set('type', 'jsapi')
+  const data = await (await fetch(url)).json()
+  return data as {
+    errcode: number;
+    errmsg: string;
+    ticket: string;
+    expires_in: number;
+  }
 }

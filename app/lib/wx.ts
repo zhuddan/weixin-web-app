@@ -17,8 +17,8 @@ export function getWXOauth2Url(redirect_uri: string) {
 
 export function getWxConfig() {
   return {
-    appId: process.env.NEXT_PUBLIC_WX_APP_ID,
-    appSecret: process.env.NEXT_PUBLIC_WX_APP_SECRET,
+    appId: process.env.NEXT_PUBLIC_WX_APP_ID!,
+    appSecret: process.env.NEXT_PUBLIC_WX_APP_SECRET!,
   };
 }
 
@@ -48,3 +48,22 @@ export async function fetchUserInfo(
   return response.json();
 }
 
+
+export async function getWxUserinfoByCode(code: string) {
+  if (!code) {
+    throw new Error('Missing code parameter')
+  }
+  // 2. 验证环境变量
+  const { appId, appSecret } = getWxConfig();
+
+  const accessTokenData = await fetchAccessToken(appId, appSecret, code);
+  if ('errcode' in accessTokenData) {
+    throw new Error('[Failed to get access token]: ' + accessTokenData.errmsg);
+  }
+  // 4. 获取用户信息
+  const userInfo = await fetchUserInfo(accessTokenData);
+  if ('errcode' in userInfo) {
+    throw new Error('[Failed to get user info]: ' + userInfo.errmsg,);
+  }
+  return userInfo
+}

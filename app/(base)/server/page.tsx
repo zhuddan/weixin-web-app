@@ -1,4 +1,5 @@
-import { getWXOauth2Url } from '@/app/lib/wx';
+import { getWXOauth2Url, getWxUserinfoByCode } from '@/app/lib/wx';
+import { UserInfo } from '@/app/ui/userinfo';
 import { redirect } from 'next/navigation';
 
 export default async function Page(props: {
@@ -11,5 +12,8 @@ export default async function Page(props: {
     const oauth2Url = getWXOauth2Url('http://127.0.0.1:3000/server')
     return redirect(oauth2Url.href)
   }
-  return <> {searchParams.code}</>
+  const data = await getWxUserinfoByCode(searchParams?.code)
+  return <>
+    <UserInfo data={data} />
+  </>
 }

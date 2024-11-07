@@ -32,6 +32,7 @@ export async function GET() {
     jsApiList: [],
   }
 
+
   return Response.json({
     data: _wxConfigOptions,
     urls: sortedParams,

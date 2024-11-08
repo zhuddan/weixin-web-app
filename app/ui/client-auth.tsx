@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams, } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/app/ui/button"
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";

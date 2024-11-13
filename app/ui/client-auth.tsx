@@ -13,7 +13,7 @@ import { WxUserInfo } from "@/app/types/wx";
 export function ClientAuth() {
   const searchParams = useSearchParams()
   function handleClick() {
-    window.location.replace(getWXOauth2Url('http://127.0.0.1:3000/client').href)
+    window.location.replace(getWXOauth2Url(location.href).href)
   }
   const code = useMemo(() => {
     const param = new URLSearchParams(searchParams)

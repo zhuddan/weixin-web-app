@@ -14,6 +14,7 @@ export function ClientAuth() {
   const searchParams = useSearchParams()
   function handleClick() {
     const replaceUrl = getWXOauth2Url(location.href).href
+    console.log(replaceUrl)
     window.location.replace(replaceUrl)
   }
   const code = useMemo(() => {

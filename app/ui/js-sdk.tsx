@@ -17,6 +17,7 @@ export function JsSdk() {
   })
   useEffect(() => {
     let isConfiguring = false
+
     if (!isConfiguring && wxConfigOptions) {
       isConfiguring = true
       const _wxConfigOptions: WxConfigOptions = {
@@ -32,6 +33,12 @@ export function JsSdk() {
         nonceStr: wxConfigOptions.nonceStr,
         signature: wxConfigOptions.signature,
         jsApiList: ["chooseImage"]
+      })
+      wx.error(function (res) {
+        console.log(res)
+      })
+      wx.ready(() => {
+        console.log('ready')
       })
     }
     return () => {

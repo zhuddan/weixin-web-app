@@ -11,7 +11,7 @@ export function JsSdk() {
   const { data: wxConfigOptions } = useQuery<WxConfigOptions, ApiError>({
     queryKey: ['JsSdk'],
     queryFn: async () => {
-      const response = await apiRequest.get<{ data: WxConfigOptions }>('/api/js-sdk')
+      const response = await apiRequest.get<{ data: WxConfigOptions }>('/api/js-sdk/xxxx?V=2')
       return response.data.data
     },
   })

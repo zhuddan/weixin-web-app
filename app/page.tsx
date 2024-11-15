@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { getUserTest } from "./lib/data";
+import JsonData from "./json-data";
 
 export const metadata = {
   title: '微信web应用',
@@ -34,12 +35,9 @@ export default async function Page() {
           })
         }
       </div>
-
-      <pre>
-        <code>
-          {JSON.stringify(user, null, 2)}
-        </code>
-      </pre>
+      <JsonData data={user} />
     </>
   );
 }
+
+
